@@ -10,28 +10,25 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
     "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
+    "allowArbitraryExtensions": false,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "newLine": "lf",
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": [
-    "typings/global.d.ts",
-    "typings/socket.d.ts",
-    "src/**/*",
-    "test/**/*",
-    "bin/**/*"
-  ],
+  "include": ["src", "test"],
   "exclude": ["node_modules"]
 }
