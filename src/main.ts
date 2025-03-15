@@ -11,7 +11,13 @@ async function bootstrap(): Promise<void> {
   });
 }
 
-bootstrap().catch((err: unknown) => {
-  console.error(err, 'Server startup failed');
-  process.exit(1);
-});
+bootstrap()
+  .then(() => {
+    // Notify the deployment platform that we're ready. This is used in PM2's
+    // graceful startup process
+    if (process.send) process.send('ready');
+  })
+  .catch((err: unknown) => {
+    console.error(err, 'Server startup failed');
+    process.exit(1);
+  });
