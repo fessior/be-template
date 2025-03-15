@@ -4,12 +4,9 @@ import compression from 'compression';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
-import { CommonConfig, commonConfigObj } from './common/config';
 
 export async function createApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
-  const commonConfig = <CommonConfig>app.get(commonConfigObj.KEY);
-  const prod = commonConfig.nodeEnv === 'production';
 
   app.use(
     compression({
@@ -24,8 +21,8 @@ export async function createApp(): Promise<INestApplication> {
   );
   app.use(
     helmet({
-      contentSecurityPolicy: prod ? undefined : false,
-      crossOriginEmbedderPolicy: prod ? undefined : false,
+      contentSecurityPolicy: true,
+      crossOriginEmbedderPolicy: true,
     }),
   );
   app.enableCors({
