@@ -4,10 +4,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/guards';
+import { ApiEnvGuard } from './common/api-env/guards';
 import { authConfigObj, CommonConfig, commonConfigObj } from './common/config';
 import { UserModule } from './users/user.module';
 
@@ -32,6 +34,14 @@ import { UserModule } from './users/user.module';
         transform: true,
         whitelist: true,
       }),
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ApiEnvGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
     {
       // Enable global response serialization

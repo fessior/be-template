@@ -40,7 +40,7 @@ export class TokenService {
     return this.tokenModel.create({ userId });
   }
 
-  public async getUserByToken(tokenId: Types.ObjectId): Promise<UserDocument> {
+  public async findUserByToken(tokenId: Types.ObjectId): Promise<UserDocument> {
     const token = await this.tokenModel
       .findById(tokenId)
       .populate<{ userId: UserDocument | null }>('userId');
@@ -56,5 +56,17 @@ export class TokenService {
       );
     }
     return token.userId;
+  }
+
+  /**
+   * Returns the token document if it exists and is valid. Otherwise, returns
+   * `null`.
+   */
+  public async findAndValidateToken(
+    tokenId: Types.ObjectId,
+  ): Promise<TokenDocument | null> {
+    const token = await this.tokenModel.findById(tokenId);
+    if (!token || !token.isActive) return null;
+    return token;
   }
 }
