@@ -17,6 +17,9 @@ declare global {
 
   namespace Express {
     interface Request {
+      /**
+       * This field can be checked to see if authenticated succeeded
+       */
       user?: User;
     }
 
