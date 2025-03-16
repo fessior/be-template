@@ -1,9 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
 
 import { GoogleAuthResult } from '../types';
 import { TokenService } from './token.service';
-import { AuthConfig } from '@/common/config';
+import { AuthConfig, authConfigObj } from '@/common/config';
 import { UserService } from '@/users/services';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class GoogleAuthService {
 
   constructor(
     private readonly oauth2Client: OAuth2Client,
-    private readonly authConfig: AuthConfig,
+    @Inject(authConfigObj.KEY) private readonly authConfig: AuthConfig,
     private readonly userService: UserService,
     private readonly tokenService: TokenService,
   ) {}

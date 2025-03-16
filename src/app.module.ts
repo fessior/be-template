@@ -7,7 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { AuthModule } from './auth/auth.module';
 import { authConfigObj, CommonConfig, commonConfigObj } from './common/config';
+import { UserModule } from './users/user.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { authConfigObj, CommonConfig, commonConfigObj } from './common/config';
       useFactory: ({ dbUri }: CommonConfig) => ({ uri: dbUri }),
       inject: [commonConfigObj.KEY],
     }),
+    AuthModule,
+    UserModule,
   ],
   providers: [
     {

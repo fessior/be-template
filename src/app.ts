@@ -1,6 +1,6 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import compression from 'compression';
+import * as compression from 'compression';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';

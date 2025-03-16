@@ -1,14 +1,19 @@
 import { Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
 import { OAuth2Client } from 'google-auth-library';
 
 import { GoogleAuthController } from './controllers';
+import { Token, TokenSchema } from './schemas';
 import { GoogleAuthService, TokenService } from './services';
 import { AuthConfig, authConfigObj } from '@/common/config';
 import { UserModule } from '@/users/user.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [
+    UserModule,
+    MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
+  ],
   controllers: [GoogleAuthController],
   providers: [
     JwtService,
