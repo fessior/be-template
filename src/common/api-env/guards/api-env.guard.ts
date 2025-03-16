@@ -10,6 +10,10 @@ import { Reflector } from '@nestjs/core';
 import { CommonConfig, commonConfigObj } from '@/common/config';
 import { CustomDecoratorKey } from '@/common/constants';
 
+/**
+ * Constrain APIs to specific environments. Can be configured with
+ * {@link MatchEnv}. Default behaviour is to allow all environments.
+ */
 @Injectable()
 export class ApiEnvGuard implements CanActivate {
   constructor(
