@@ -1,7 +1,7 @@
 import { CustomDecorator, SetMetadata } from '@nestjs/common';
 
-import { CommonConfig } from '@/common/config';
+import { NodeEnv } from '@/common/config';
 import { CustomDecoratorKey } from '@/common/constants';
 
-export const MatchEnv = (envs: CommonConfig['nodeEnv'][]): CustomDecorator =>
+export const MatchEnv = (envs: NodeEnv[]): CustomDecorator =>
   SetMetadata(CustomDecoratorKey.API_ENV, envs);

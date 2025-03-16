@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { CommonConfig, commonConfigObj } from '@/common/config';
+import { CommonConfig, commonConfigObj, NodeEnv } from '@/common/config';
 import { CustomDecoratorKey } from '@/common/constants';
 
 /**
@@ -23,7 +23,7 @@ export class ApiEnvGuard implements CanActivate {
   ) {}
 
   canActivate(ctx: ExecutionContext): boolean {
-    const envs = this.reflector.get<CommonConfig['nodeEnv'][] | undefined>(
+    const envs = this.reflector.get<NodeEnv[] | undefined>(
       CustomDecoratorKey.API_ENV,
       ctx.getHandler(),
     );

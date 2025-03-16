@@ -7,7 +7,7 @@ const commonConfigSchema = z.object({
   dbUri: z.string().nonempty(),
 });
 
-type NodeEnv = 'local' | 'development' | 'production';
+export type NodeEnv = 'local' | 'development' | 'production';
 
 type CommonConfigType = z.infer<typeof commonConfigSchema>;
 
