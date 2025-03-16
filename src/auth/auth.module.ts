@@ -29,5 +29,6 @@ import { UserModule } from '@/users/user.module';
         }),
     },
   ],
+  exports: [TokenService],
 })
 export class AuthModule {}
