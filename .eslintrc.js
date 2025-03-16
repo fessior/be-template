@@ -5,17 +5,11 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: [
-    '@typescript-eslint/eslint-plugin',
-    'sonarjs',
-    'jest',
-    'unused-imports',
-  ],
+  plugins: ['@typescript-eslint/eslint-plugin', 'sonarjs', 'unused-imports'],
   extends: [
     'eslint:recommended',
     'airbnb-base',
     'airbnb-typescript/base',
-    'plugin:jest/recommended',
     'plugin:sonarjs/recommended-legacy',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
@@ -37,7 +31,6 @@ module.exports = {
     // https://github.com/typescript-eslint/typescript-eslint/issues/1277
     'consistent-return': 'off',
     'func-names': 'off',
-    'max-len': ['warn', { code: 180, ignoreTemplateLiterals: true }],
     'newline-per-chained-call': 'off',
     'no-await-in-loop': 'off',
     'no-continue': 'off',
@@ -73,10 +66,9 @@ module.exports = {
     'no-unused-expressions': 'off',
     'object-curly-spacing': 'off',
     'max-classes-per-file': 'off',
-    'no-underscore-dangle': 'off',
+
     // https://github.com/benmosher/eslint-plugin-import/issues/1753
     'import/named': 'off',
-    'import/no-cycle': 'off',
     'import/no-default-export': 'error',
     'import/order': [
       'error',
@@ -87,6 +79,7 @@ module.exports = {
       },
     ],
     'import/prefer-default-export': 'off',
+    'import/extensions': 'off',
 
     '@typescript-eslint/consistent-indexed-object-style': 'error',
     '@typescript-eslint/consistent-type-assertions': [
@@ -143,13 +136,8 @@ module.exports = {
       },
     ],
     '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
-    '@typescript-eslint/no-misused-promises': [
-      'error',
-      { checksVoidReturn: false },
-    ],
+
     'sonarjs/no-duplicate-string': 'off',
-    'sonarjs/todo-tag': 'warn',
-    'sonarjs/no-async-constructor': 'warn',
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
       'warn',
