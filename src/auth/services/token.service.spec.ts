@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
@@ -6,6 +7,7 @@ import { Model, Types } from 'mongoose';
 import { TokenService } from './token.service';
 import { Token } from '../schemas';
 import { AuthConfig, authConfigObj } from '@/common/config';
+import { User } from '@/users/schemas';
 
 const tokenModelMock = {
   create: jest.fn(),
@@ -100,6 +102,46 @@ describe('TokenService', () => {
 
       const token = await tokenService.findAndValidateToken(expiredToken._id);
       expect(token).toBeNull();
+    });
+
+    test('Token does not exist', async () => {
+      model.findById.mockResolvedValueOnce(null);
+      const token = await tokenService.findAndValidateToken(
+        new Types.ObjectId(),
+      );
+      expect(token).toBeNull();
+    });
+  });
+
+  describe('Finding user by token', () => {
+    it('Should return the user when token exists and matches a user', async () => {
+      const mockToken: Omit<Token, 'userId'> & { userId: User } = {
+        userId: {
+          email: '123@gmail.com',
+          googleId: '123',
+          firstName: 'John',
+          lastName: 'Doe',
+          avatarUrl: 'https://example.com/avatar.jpg',
+        },
+        isActive: true,
+        expiredAt: new Date('2022-01-01T00:00:00Z'),
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      model.findById.mockReturnValueOnce(<any>{
+        populate: jest.fn().mockResolvedValueOnce(mockToken),
+      });
+      const user = await tokenService.findUserByToken(new Types.ObjectId());
+      expect(user).toEqual(mockToken.userId);
+    });
+
+    it('Should throw 401 when token is not found', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      model.findById.mockReturnValueOnce(<any>{
+        populate: jest.fn().mockResolvedValueOnce(null),
+      });
+      await expect(
+        tokenService.findUserByToken(new Types.ObjectId()),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });
