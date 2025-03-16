@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
@@ -126,7 +127,6 @@ describe('TokenService', () => {
         isActive: true,
         expiredAt: new Date('2022-01-01T00:00:00Z'),
       };
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       model.findById.mockReturnValueOnce(<any>{
         populate: jest.fn().mockResolvedValueOnce(mockToken),
       });
@@ -135,7 +135,6 @@ describe('TokenService', () => {
     });
 
     it('Should throw 401 when token is not found', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       model.findById.mockReturnValueOnce(<any>{
         populate: jest.fn().mockResolvedValueOnce(null),
       });
