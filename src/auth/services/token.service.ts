@@ -21,9 +21,9 @@ export class TokenService {
     @Inject(authConfigObj.KEY) private readonly authConfig: AuthConfig,
   ) {}
 
-  public async sign(token: TokenDocument): Promise<string> {
+  public async sign(tokenId: Types.ObjectId): Promise<string> {
     const jwt: DecodedJwt = {
-      tokenId: token._id.toString(),
+      tokenId: tokenId.toString(),
     };
     return this.jwtService.signAsync(jwt, {
       secret: this.authConfig.jwtSecret,
@@ -66,7 +66,9 @@ export class TokenService {
     tokenId: Types.ObjectId,
   ): Promise<TokenDocument | null> {
     const token = await this.tokenModel.findById(tokenId);
-    if (!token || !token.isActive) return null;
+    const now = new Date();
+    if (!token) return null;
+    if (!token.isActive || now > token.expiredAt) return null;
     return token;
   }
 }
