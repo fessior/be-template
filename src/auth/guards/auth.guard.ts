@@ -52,7 +52,7 @@ export class AuthGuard implements CanActivate {
           'No token was provided in request header',
         );
       }
-      const { tokenId } = await this.tokenService.decode(rawToken);
+      const { tokenId } = await this.tokenService.decodeAccessToken(rawToken);
       const token = await this.tokenService.findAndValidateToken(
         new Types.ObjectId(tokenId),
       );
