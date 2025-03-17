@@ -7429,9 +7429,9 @@ run-parallel@^1.1.9:
     queue-microtask "^1.2.2"
 
 run-script-webpack-plugin@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/run-script-webpack-plugin/-/run-script-webpack-plugin-0.2.0.tgz#45bfdd4e11345c8619eabaef8113c2a4f26dc653"
-  integrity sha512-SVNNq4jxzjfnaW+HkdTlyH1CWwCuSb/weYfic0D7Y/KnhY27YRYkzgybdzTDEPJlpQ73FDCRDbyBFwNsJMmwWQ==
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/run-script-webpack-plugin/-/run-script-webpack-plugin-0.2.2.tgz#83a56742bff84310bb6e43cfeebdde70c8509599"
+  integrity sha512-6FBCE6gVwGI2BXWyUDI1zwjFimQRe2gW+j4KRnVWpA5oj4aq9n/CFhRlMvsTQsNx7B3eHWkxhZ+jTxjDSlGuYQ==
 
 rxjs@7.8.1, rxjs@^7.8.1:
   version "7.8.1"
