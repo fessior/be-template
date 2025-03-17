@@ -1,5 +1,5 @@
-import { TokenDocument } from '@/auth/schemas';
-import { UserDocument } from '@/users/schemas';
+import { Token } from '@/auth/schemas';
+import { User } from '@/users/schemas';
 
 declare global {
   namespace NodeJS {
@@ -21,8 +21,8 @@ declare global {
     }
 
     interface AuthenticatedUser {
-      token: TokenDocument;
-      profile: UserDocument;
+      token: Token;
+      profile: User;
     }
   }
 }

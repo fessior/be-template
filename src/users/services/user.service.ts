@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateQuery } from 'mongoose';
 
-import { User, UserDocument } from '../schemas';
+import { User } from '../schemas';
 import {
   CreateOrUpdateUserResult,
   CreateUserOptions,
@@ -26,7 +26,7 @@ export class UserService {
     await createUserSchema.parseAsync(options);
     const { email, googleId, firstName, lastName, picture } = options;
     // Update user information in case it doesn't already exist
-    const update: UpdateQuery<UserDocument> = {
+    const update: UpdateQuery<User> = {
       googleId,
       firstName,
       lastName,
@@ -37,6 +37,7 @@ export class UserService {
       upsert: true,
       setDefaultsOnInsert: false,
       includeResultMetadata: true,
+      lean: true,
     });
     return {
       exists: res.lastErrorObject?.updatedExisting || false,
