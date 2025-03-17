@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -32,6 +33,8 @@ import { CustomDecoratorKey } from '@/common/constants';
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private readonly logger: Logger = new Logger(AuthGuard.name);
+
   constructor(
     private readonly tokenService: TokenService,
     private reflector: Reflector,
@@ -64,7 +67,8 @@ export class AuthGuard implements CanActivate {
         profile: user,
       };
       return true;
-    } catch {
+    } catch (err) {
+      this.logger.error(`Authentication failed. Reason: ${err}`);
       if (opt.blockIfUnauthenticated) {
         throw new UnauthorizedException();
       }

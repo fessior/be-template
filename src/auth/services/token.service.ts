@@ -11,13 +11,14 @@ import { Model, Types } from 'mongoose';
 import { Token, TokenDocument } from '../schemas';
 import { DecodedJwt } from '../types';
 import { AuthConfig, authConfigObj } from '@/common/config';
-import { UserDocument } from '@/users/schemas';
+import { User, UserDocument } from '@/users/schemas';
 
 @Injectable()
 export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     @InjectModel(Token.name) private readonly tokenModel: Model<Token>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
     @Inject(authConfigObj.KEY) private readonly authConfig: AuthConfig,
   ) {}
 

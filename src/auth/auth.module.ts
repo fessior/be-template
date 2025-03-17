@@ -7,12 +7,16 @@ import { GoogleAuthController } from './controllers';
 import { Token, TokenSchema } from './schemas';
 import { GoogleAuthService, TokenService } from './services';
 import { AuthConfig, authConfigObj } from '@/common/config';
+import { User, UserSchema } from '@/users/schemas';
 import { UserModule } from '@/users/user.module';
 
 @Module({
   imports: [
     UserModule,
-    MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
+    MongooseModule.forFeature([
+      { name: Token.name, schema: TokenSchema },
+      { name: User.name, schema: UserSchema },
+    ]),
   ],
   controllers: [GoogleAuthController],
   providers: [
@@ -29,5 +33,6 @@ import { UserModule } from '@/users/user.module';
         }),
     },
   ],
+  exports: [TokenService],
 })
 export class AuthModule {}

@@ -17,10 +17,10 @@ declare global {
 
   namespace Express {
     interface Request {
-      user?: User;
+      user?: AuthenticatedUser;
     }
 
-    interface User {
+    interface AuthenticatedUser {
       token: TokenDocument;
       profile: UserDocument;
     }

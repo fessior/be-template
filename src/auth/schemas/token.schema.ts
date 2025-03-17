@@ -2,11 +2,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as dayjs from 'dayjs';
 import { HydratedDocument, Types } from 'mongoose';
 
+import { User } from '@/users/schemas';
+
 export type TokenDocument = HydratedDocument<Token>;
 
-@Schema({ timestamps: true, collection: 'tokens' })
+@Schema({ timestamps: true })
 export class Token {
-  @Prop({ type: Types.ObjectId, required: true, ref: 'users', index: true })
+  @Prop({ type: Types.ObjectId, required: true, ref: User.name, index: true })
   public userId: Types.ObjectId;
 
   @Prop({ default: true })
