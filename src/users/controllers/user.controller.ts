@@ -10,7 +10,7 @@ export class UserController {
 
   @Get('me')
   public myProfile(
-    @ReqUser() authUser: Express.AuthenticatedUser,
+    @ReqUser() authUser: Express.AuthenticatedHttpUser,
   ): MyProfileResponse {
     // We assume that we're already authenticated, therefore it's safe to return
     // the user object directly

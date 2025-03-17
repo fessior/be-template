@@ -22,7 +22,7 @@ export class TokenService {
     @Inject(authConfigObj.KEY) private readonly authConfig: AuthConfig,
   ) {}
 
-  public async generateAccessToken(token: Token): Promise<string> {
+  public async signAccessToken(token: Token): Promise<string> {
     const jwt: DecodedJwt = {
       tokenId: token._id.toString(),
     };
@@ -31,7 +31,7 @@ export class TokenService {
     });
   }
 
-  public async decode(token: string): Promise<DecodedJwt> {
+  public async decodeAccessToken(token: string): Promise<DecodedJwt> {
     return this.jwtService.verifyAsync<DecodedJwt>(token, {
       secret: this.authConfig.jwtSecret,
     });

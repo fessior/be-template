@@ -42,7 +42,7 @@ export class GoogleAuthService {
 
     // Generate token for this authentication attempt
     const token = await this.tokenService.create(user._id);
-    const accessToken = await this.tokenService.generateAccessToken(token);
+    const accessToken = await this.tokenService.signAccessToken(token);
     return {
       user,
       accessToken,
