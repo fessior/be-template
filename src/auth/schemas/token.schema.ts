@@ -1,19 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as dayjs from 'dayjs';
-import { HydratedDocument, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
-export type TokenDocument = HydratedDocument<Token>;
+import { User } from '@/users/schemas';
 
-@Schema({ timestamps: true, collection: 'tokens' })
+@Schema({ timestamps: true })
 export class Token {
-  @Prop({ type: Types.ObjectId, required: true, ref: 'users', index: true })
-  public userId: Types.ObjectId;
+  @Prop({ type: Types.ObjectId })
+  _id: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, required: true, ref: User.name, index: true })
+  userId: Types.ObjectId;
 
   @Prop({ default: true })
-  public isActive: boolean;
+  isActive: boolean;
 
   @Prop({ default: () => dayjs().add(1, 'year').toDate() })
-  public expiredAt: Date;
+  expiredAt: Date;
 }
 
 export const TokenSchema = SchemaFactory.createForClass(Token);

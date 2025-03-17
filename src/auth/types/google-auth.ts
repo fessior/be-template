@@ -1,6 +1,6 @@
-import { UserDocument } from '@/users/schemas';
+import { User } from '@/users/schemas';
 
 export type GoogleAuthResult = {
-  user: UserDocument;
+  user: User;
   accessToken: string;
 };

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { UserDocument } from '../schemas';
+import { User } from '../schemas';
 
 export const createUserSchema = z.object({
   email: z.string().email(),
@@ -14,5 +14,5 @@ export type CreateUserOptions = z.infer<typeof createUserSchema>;
 
 export type CreateOrUpdateUserResult = {
   exists: boolean;
-  user: UserDocument;
+  user: User;
 };
