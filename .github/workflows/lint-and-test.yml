@@ -2,7 +2,7 @@ name: Lint code
 on: workflow_call
 
 jobs:
-  lint:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,3 +21,14 @@ jobs:
 
       - name: Lint code
         run: yarn eslint src/**/*.ts --output-file eslint-report.json --format json
+
+      - name: Run unit tests
+        run: JEST_JUNIT_OUTPUT_DIR=reports JEST_JUNIT_OUTPUT_NAME=unit-test.xml yarn test --reporters=jest-junit
+
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        if: success() || failure()
+        with:
+          name: Unit tests
+          path: reports/unit-test.xml
+          reporter: jest-junit
