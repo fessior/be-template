@@ -84,6 +84,8 @@ describe('GoogleAuthService', () => {
     });
 
     it('Should throw an error if the token is invalid', async () => {
+      // TypeScript thinks we're using the version of `verifyIdToken` without
+      // a return value, so we bypass this by casting to `never`.
       oauth2Client.verifyIdToken.mockRejectedValueOnce(
         <never>new Error('Invalid token'),
       );
