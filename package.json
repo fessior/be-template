@@ -99,6 +99,7 @@
       "json",
       "ts"
     ],
+    "maxWorkers": 1,
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
