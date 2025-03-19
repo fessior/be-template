@@ -29,7 +29,7 @@ jobs:
           report-json: './eslint-report.json'
 
       - name: Run unit tests
-        run: JEST_JUNIT_OUTPUT_DIR=reports JEST_JUNIT_OUTPUT_NAME=unit-test.xml yarn test --reporters=jest-junit
+        run: JEST_JUNIT_OUTPUT_DIR=reports JEST_JUNIT_OUTPUT_NAME=unit-test.xml JEST_JUNIT_ANCESTOR_SEPARATOR=" > " yarn test --reporters=jest-junit
 
       - name: Test Report
         uses: dorny/test-reporter@v2
