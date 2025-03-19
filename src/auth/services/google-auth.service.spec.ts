@@ -6,7 +6,6 @@ import { Types } from 'mongoose';
 
 import { GoogleAuthService } from './google-auth.service';
 import { TokenService } from './token.service';
-import { Token } from '../schemas';
 import { authConfigObj } from '@/common/config';
 import { MOCK_AUTH_CONFIG } from '@/common/config/mocks';
 import { User } from '@/users/schemas';
@@ -19,13 +18,6 @@ const MOCK_USER: User = {
   email: 'johndoe@gmail.com',
   googleId: '1234567890',
   avatarUrl: 'https://example.com/picture.jpg',
-};
-
-const MOCK_TOKEN: Token = {
-  _id: new Types.ObjectId('81927555e99b62c9b1984300'),
-  userId: new Types.ObjectId('81927555e99b62c9b1984301'),
-  isActive: true,
-  expiredAt: new Date('2022-03-01T00:00:00.000Z'),
 };
 
 describe('GoogleAuthService', () => {
@@ -71,14 +63,16 @@ describe('GoogleAuthService', () => {
         picture: MOCK_USER.avatarUrl,
         sub: MOCK_USER.googleId,
       });
-      userService.createOrUpdateUser.mockResolvedValueOnce({
-        alreadyExists: false,
-        user: MOCK_USER,
-      });
-      tokenService.create.mockResolvedValueOnce(MOCK_TOKEN);
 
       await googleAuthService.authenticate(idToken);
       expect(userService.createOrUpdateUser).toHaveBeenCalledTimes(1);
+      expect(userService.createOrUpdateUser).toHaveBeenCalledWith({
+        email: MOCK_USER.email,
+        firstName: MOCK_USER.firstName,
+        lastName: MOCK_USER.lastName,
+        picture: MOCK_USER.avatarUrl,
+        googleId: MOCK_USER.googleId,
+      });
       expect(tokenService.create).toHaveBeenCalledTimes(1);
       expect(tokenService.signAccessToken).toHaveBeenCalledTimes(1);
     });
