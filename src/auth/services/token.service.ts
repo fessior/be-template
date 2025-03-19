@@ -62,13 +62,16 @@ export class TokenService {
 
   /**
    * Returns the token document if it exists and is valid. Otherwise, returns
-   * `null`.
+   * `null`. Validity is defined as having `isActive` set to `true`, and current
+   * date is less than `expiredAt`.
    */
   public async findAndValidateToken(
     tokenId: Types.ObjectId,
   ): Promise<Token | null> {
+    const now = new Date();
     const token = await this.tokenModel.findById(tokenId).lean();
-    if (!token || !token.isActive) return null;
+    if (!token) return null;
+    if (!token.isActive || now >= token.expiredAt) return null;
     return token;
   }
 }
