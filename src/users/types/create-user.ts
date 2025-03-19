@@ -13,6 +13,6 @@ export const createUserSchema = z.object({
 export type CreateUserOptions = z.infer<typeof createUserSchema>;
 
 export type CreateOrUpdateUserResult = {
-  exists: boolean;
+  alreadyExists: boolean;
   user: User;
 };
