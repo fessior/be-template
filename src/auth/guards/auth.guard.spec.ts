@@ -98,6 +98,9 @@ describe('AuthGuard', () => {
 
     it('Should throw an error if invalid token provided', async () => {
       req.headers.authorization = 'Bearer 123';
+      tokenService.decodeAccessToken.mockResolvedValueOnce(<DecodedJwt>{
+        tokenId: MOCK_TOKEN._id.toHexString(),
+      });
       tokenService.findAndValidateToken.mockResolvedValueOnce(null);
       reflector.get.mockReturnValue(<AuthOption>{});
       await expect(authGuard.canActivate(ctx)).rejects.toThrow(
