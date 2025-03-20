@@ -40,7 +40,7 @@ export class UserService {
       lean: true,
     });
     return {
-      exists: res.lastErrorObject?.updatedExisting || false,
+      alreadyExists: res.lastErrorObject?.updatedExisting || false,
       user: res.value!,
     };
   }

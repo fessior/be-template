@@ -69,3 +69,6 @@ src/secrets/*
 
 # ESLint report
 eslint-report.json
+
+# Jest-junit reports
+/reports
