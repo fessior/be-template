@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 import { User } from '../schemas';
 
-export class UserMock {
+export class UserMockData {
   public static getUser(): User {
     return {
       _id: new Types.ObjectId('65fbdb8e9c3a4f27b2e6a1d5'),

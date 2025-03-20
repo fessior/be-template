@@ -4,7 +4,7 @@ import { Token } from '../schemas';
 import { DecodedJwt } from '../types';
 import { User } from '@/users/schemas';
 
-export class TokenMock {
+export class TokenMockData {
   /**
    * Timestamp to use for token validation
    * `getValidToken`, `getInactiveToken`, and `getExpiredToken`

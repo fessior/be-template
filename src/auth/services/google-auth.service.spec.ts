@@ -7,10 +7,10 @@ import { GoogleAuthService } from './google-auth.service';
 import { TokenService } from './token.service';
 import { authConfigObj } from '@/common/config';
 import { ConfigMock } from '@/common/config/mocks';
-import { UserMock } from '@/users/mocks';
+import { UserMockData } from '@/users/mocks';
 import { UserService } from '@/users/services';
 
-const MOCK_USER = UserMock.getUser();
+const MOCK_USER = UserMockData.getUser();
 
 describe('GoogleAuthService', () => {
   let userService: DeepMocked<UserService>;

@@ -6,18 +6,18 @@ import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
 import { TokenService } from './token.service';
-import { TokenMock } from '../mocks';
+import { TokenMockData } from '../mocks';
 import { Token } from '../schemas';
 import { authConfigObj } from '@/common/config';
 import { ConfigMock } from '@/common/config/mocks';
-import { UserMock } from '@/users/mocks';
+import { UserMockData } from '@/users/mocks';
 import { User } from '@/users/schemas';
 
-const MOCK_USER = UserMock.getUser();
+const MOCK_USER = UserMockData.getUser();
 
-const VALID_TOKEN = TokenMock.getValidToken(MOCK_USER);
-const INACTIVE_TOKEN = TokenMock.getInactiveToken(MOCK_USER);
-const EXPIRED_TOKEN = TokenMock.getExpiredToken(MOCK_USER);
+const VALID_TOKEN = TokenMockData.getValidToken(MOCK_USER);
+const INACTIVE_TOKEN = TokenMockData.getInactiveToken(MOCK_USER);
+const EXPIRED_TOKEN = TokenMockData.getExpiredToken(MOCK_USER);
 
 describe('TokenService', () => {
   let tokenService: TokenService;
@@ -74,7 +74,7 @@ describe('TokenService', () => {
 
   describe('Testing token validity, given the token ID', () => {
     beforeAll(() => {
-      jest.useFakeTimers({ now: TokenMock.mockTimestamp });
+      jest.useFakeTimers({ now: TokenMockData.mockTimestamp });
     });
     afterAll(() => {
       jest.useRealTimers();

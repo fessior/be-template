@@ -6,15 +6,15 @@ import { Test } from '@nestjs/testing';
 import { Request } from 'express';
 
 import { AuthGuard } from './auth.guard';
-import { TokenMock } from '../mocks';
+import { TokenMockData } from '../mocks';
 import { TokenService } from '../services';
 import { AuthOption } from '../types';
-import { UserMock } from '@/users/mocks';
+import { UserMockData } from '@/users/mocks';
 
-const MOCK_USER = UserMock.getUser();
+const MOCK_USER = UserMockData.getUser();
 
-const MOCK_TOKEN = TokenMock.getValidToken(MOCK_USER);
-const MOCK_DECODED_JWT = TokenMock.getDecodedJwt(MOCK_TOKEN);
+const MOCK_TOKEN = TokenMockData.getValidToken(MOCK_USER);
+const MOCK_DECODED_JWT = TokenMockData.getDecodedJwt(MOCK_TOKEN);
 
 describe('AuthGuard', () => {
   let reflector: DeepMocked<Reflector>;
