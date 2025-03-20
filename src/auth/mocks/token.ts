@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 
 import { Token } from '../schemas';
+import { DecodedJwt } from '../types';
 import { User } from '@/users/schemas';
 
 export class TokenMock {
@@ -37,6 +38,12 @@ export class TokenMock {
       userId: user._id,
       isActive: true,
       expiredAt: new Date('2022-01-01T00:00:00.000Z'),
+    };
+  }
+
+  public static getDecodedJwt(token: Token): DecodedJwt {
+    return {
+      tokenId: token._id.toString(),
     };
   }
 }

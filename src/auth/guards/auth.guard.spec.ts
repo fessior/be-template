@@ -8,12 +8,13 @@ import { Request } from 'express';
 import { AuthGuard } from './auth.guard';
 import { TokenMock } from '../mocks';
 import { TokenService } from '../services';
-import { AuthOption, DecodedJwt } from '../types';
+import { AuthOption } from '../types';
 import { UserMock } from '@/users/mocks';
 
 const MOCK_USER = UserMock.getUser();
 
 const MOCK_TOKEN = TokenMock.getValidToken(MOCK_USER);
+const MOCK_DECODED_JWT = TokenMock.getDecodedJwt(MOCK_TOKEN);
 
 describe('AuthGuard', () => {
   let reflector: DeepMocked<Reflector>;
@@ -58,9 +59,7 @@ describe('AuthGuard', () => {
 
   it('Should attach user and token to request if authentication succeeds', async () => {
     req.headers.authorization = 'Bearer 123';
-    tokenService.decodeAccessToken.mockResolvedValueOnce(<DecodedJwt>{
-      tokenId: MOCK_TOKEN._id.toHexString(),
-    });
+    tokenService.decodeAccessToken.mockResolvedValueOnce(MOCK_DECODED_JWT);
     tokenService.findAndValidateToken.mockResolvedValueOnce(MOCK_TOKEN);
     tokenService.findUserByToken.mockResolvedValueOnce(MOCK_USER);
     reflector.get.mockReturnValue(<AuthOption>{});
@@ -85,9 +84,7 @@ describe('AuthGuard', () => {
 
     it('Should throw an error if invalid token provided', async () => {
       req.headers.authorization = 'Bearer 123';
-      tokenService.decodeAccessToken.mockResolvedValueOnce(<DecodedJwt>{
-        tokenId: MOCK_TOKEN._id.toHexString(),
-      });
+      tokenService.decodeAccessToken.mockResolvedValueOnce(MOCK_DECODED_JWT);
       tokenService.findAndValidateToken.mockResolvedValueOnce(null);
       reflector.get.mockReturnValue(<AuthOption>{});
       await expect(authGuard.canActivate(ctx)).rejects.toThrow(
