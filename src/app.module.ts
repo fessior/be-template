@@ -10,19 +10,26 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards';
 import { ApiEnvGuard } from './common/api-env/guards';
-import { authConfigObj, CommonConfig, commonConfigObj } from './common/config';
+import {
+  authConfigObj,
+  CommonConfig,
+  commonConfigObj,
+  observabilityConfigObj,
+} from './common/config';
+import { ObservabilityModule } from './common/observability/observability.module';
 import { UserModule } from './users/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [commonConfigObj, authConfigObj],
+      load: [commonConfigObj, authConfigObj, observabilityConfigObj],
     }),
     MongooseModule.forRootAsync({
       useFactory: ({ dbUri }: CommonConfig) => ({ uri: dbUri }),
       inject: [commonConfigObj.KEY],
     }),
+    ObservabilityModule,
     AuthModule,
     UserModule,
   ],
