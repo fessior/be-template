@@ -2,23 +2,15 @@
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 import { LoginTicket, OAuth2Client } from 'google-auth-library';
-import { Types } from 'mongoose';
 
 import { GoogleAuthService } from './google-auth.service';
 import { TokenService } from './token.service';
 import { authConfigObj } from '@/common/config';
 import { MOCK_AUTH_CONFIG } from '@/common/config/mocks';
-import { User } from '@/users/schemas';
+import { UserMock } from '@/users/mocks';
 import { UserService } from '@/users/services';
 
-const MOCK_USER: User = {
-  _id: new Types.ObjectId('81927555e99b62c9b1984301'),
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'johndoe@gmail.com',
-  googleId: '1234567890',
-  avatarUrl: 'https://example.com/picture.jpg',
-};
+const MOCK_USER = UserMock.getUser();
 
 describe('GoogleAuthService', () => {
   let userService: DeepMocked<UserService>;

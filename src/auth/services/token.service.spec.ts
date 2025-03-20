@@ -3,43 +3,21 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { TokenService } from './token.service';
+import { TokenMock } from '../mocks';
 import { Token } from '../schemas';
 import { authConfigObj } from '@/common/config';
 import { MOCK_AUTH_CONFIG } from '@/common/config/mocks';
+import { UserMock } from '@/users/mocks';
 import { User } from '@/users/schemas';
 
-const VALID_TOKEN: Token = {
-  _id: new Types.ObjectId('81927555e99b62c9b1984300'),
-  userId: new Types.ObjectId('81927555e99b62c9b1984301'),
-  isActive: true,
-  expiredAt: new Date('2022-03-01T00:00:00.000Z'),
-};
+const MOCK_USER = UserMock.getUser();
 
-const INACTIVE_TOKEN: Token = {
-  _id: new Types.ObjectId('81927555e99b62c9b1984300'),
-  userId: new Types.ObjectId('81927555e99b62c9b1984301'),
-  isActive: false,
-  expiredAt: new Date('2022-03-01T00:00:00.000Z'),
-};
-
-const EXPIRED_TOKEN: Token = {
-  _id: new Types.ObjectId('81927555e99b62c9b1984300'),
-  userId: new Types.ObjectId('81927555e99b62c9b1984301'),
-  isActive: true,
-  expiredAt: new Date('2022-01-01T00:00:00.000Z'),
-};
-
-const MOCK_USER: User = {
-  _id: new Types.ObjectId('81927555e99b62c9b1984301'),
-  email: 'johndoe@gmail.com',
-  firstName: 'John',
-  lastName: 'Doe',
-  googleId: '1234567890',
-  avatarUrl: 'https://example.com/avatar.jpg',
-};
+const VALID_TOKEN = TokenMock.getValidToken(MOCK_USER);
+const INACTIVE_TOKEN = TokenMock.getInactiveToken(MOCK_USER);
+const EXPIRED_TOKEN = TokenMock.getExpiredToken(MOCK_USER);
 
 describe('TokenService', () => {
   let tokenService: TokenService;
@@ -96,7 +74,7 @@ describe('TokenService', () => {
 
   describe('Testing token validity, given the token ID', () => {
     beforeAll(() => {
-      jest.useFakeTimers({ now: new Date('2022-02-01T00:00:00.000Z') });
+      jest.useFakeTimers({ now: TokenMock.mockTimestamp });
     });
     afterAll(() => {
       jest.useRealTimers();

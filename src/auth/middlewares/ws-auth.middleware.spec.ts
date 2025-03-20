@@ -1,29 +1,16 @@
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
-import { Types } from 'mongoose';
 import { Socket } from 'socket.io';
 
 import { WsAuthMiddleware } from './ws-auth.middleware';
-import { Token } from '../schemas';
+import { TokenMock } from '../mocks';
 import { TokenService } from '../services';
 import { DecodedJwt } from '../types';
-import { User } from '@/users/schemas';
+import { UserMock } from '@/users/mocks';
 
-const MOCK_TOKEN: Token = {
-  _id: new Types.ObjectId('67da752e3a426b153739c130'),
-  userId: new Types.ObjectId('67da753f3a426b153739c131'),
-  isActive: true,
-  expiredAt: new Date('2022-03-01T00:00:00.000Z'),
-};
+const MOCK_USER = UserMock.getUser();
 
-const MOCK_USER: User = {
-  _id: new Types.ObjectId('67da753f3a426b153739c131'),
-  email: 'johndoe@gmail.com',
-  firstName: 'John',
-  lastName: 'Doe',
-  googleId: '1234567890',
-  avatarUrl: 'https://example.com/avatar.jpg',
-};
+const MOCK_TOKEN = TokenMock.getValidToken(MOCK_USER);
 
 describe('WsAuthMiddleware', () => {
   let tokenService: DeepMocked<TokenService>;
