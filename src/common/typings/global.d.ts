@@ -12,6 +12,8 @@ declare global {
       GOOGLE_CLIENT_SECRET: string;
 
       JWT_SECRET: string;
+
+      O11Y_HEAP_THRESHOLD_BYTES: string;
     }
   }
 
