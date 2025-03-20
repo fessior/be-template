@@ -6,7 +6,7 @@ import { LoginTicket, OAuth2Client } from 'google-auth-library';
 import { GoogleAuthService } from './google-auth.service';
 import { TokenService } from './token.service';
 import { authConfigObj } from '@/common/config';
-import { MOCK_AUTH_CONFIG } from '@/common/config/mocks';
+import { ConfigMock } from '@/common/config/mocks';
 import { UserMock } from '@/users/mocks';
 import { UserService } from '@/users/services';
 
@@ -27,7 +27,7 @@ describe('GoogleAuthService', () => {
         GoogleAuthService,
         {
           provide: authConfigObj.KEY,
-          useValue: MOCK_AUTH_CONFIG,
+          useValue: ConfigMock.getAuthConfig(),
         },
         { provide: UserService, useValue: userService },
         { provide: TokenService, useValue: tokenService },

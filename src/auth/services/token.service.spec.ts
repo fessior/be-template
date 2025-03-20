@@ -9,7 +9,7 @@ import { TokenService } from './token.service';
 import { TokenMock } from '../mocks';
 import { Token } from '../schemas';
 import { authConfigObj } from '@/common/config';
-import { MOCK_AUTH_CONFIG } from '@/common/config/mocks';
+import { ConfigMock } from '@/common/config/mocks';
 import { UserMock } from '@/users/mocks';
 import { User } from '@/users/schemas';
 
@@ -40,7 +40,7 @@ describe('TokenService', () => {
         },
         {
           provide: authConfigObj.KEY,
-          useValue: MOCK_AUTH_CONFIG,
+          useValue: ConfigMock.getAuthConfig(),
         },
       ],
     }).compile();
