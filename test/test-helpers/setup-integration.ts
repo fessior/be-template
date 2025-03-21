@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /* eslint-disable import/first */
 /* eslint-disable import/no-mutable-exports */
 
@@ -7,15 +8,13 @@
  * replaced with Docker containers, while unmanaged dependencies (e.g external
  * services) are replaced with mocks.
  */
-// eslint-disable-next-line import/order
 import { config } from 'dotenv';
-// eslint-disable-next-line import/order
 import { resolve } from 'path';
 
 // Has to happen before any other imports
 config({ path: resolve(__dirname, '../../.env.integration'), override: true });
 
-import { createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { OAuth2Client } from 'google-auth-library';
@@ -24,11 +23,13 @@ import { clearDatabase } from './db';
 import { configApp } from '@/app';
 import { AppModule } from '@/app.module';
 
+import { Server } from 'net';
+
 // Unmanaged dependencies
-let oauth2Client: OAuth2Client;
+let oauth2Client: DeepMocked<OAuth2Client>;
 
 let testModule: TestingModule;
-let testApp: INestApplication;
+let testApp: INestApplication<Server>;
 
 beforeAll(async () => {
   // Mock all unmanaged dependencies
@@ -49,16 +50,14 @@ beforeEach(async () => {
   await clearDatabase(testModule);
   jest.clearAllMocks();
   jest.clearAllTimers();
+  jest.useRealTimers();
 });
 
 afterAll(async () => {
   await testApp.close();
 });
 
-const testDeps = {
-  // @ts-expect-error TypeScript doesn't know that `oauth2Client` will have been
-  // assigned when tests include this file
-  oauth2Client,
-};
+// Give some extra time for containers to spin up
+jest.setTimeout(300000);
 
-export { testApp, testModule, testDeps };
+export { testApp, testModule };

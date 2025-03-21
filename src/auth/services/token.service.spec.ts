@@ -3,6 +3,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { fakeSystemTime } from '@test-helpers/time';
 import { Model } from 'mongoose';
 
 import { TokenService } from './token.service';
@@ -74,7 +75,7 @@ describe('TokenService', () => {
 
   describe('Testing token validity, given the token ID', () => {
     beforeAll(() => {
-      jest.useFakeTimers({ now: TokenMockData.mockTimestamp });
+      fakeSystemTime(TokenMockData.mockTimestamp);
     });
     afterAll(() => {
       jest.useRealTimers();
