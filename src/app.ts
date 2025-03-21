@@ -1,13 +1,8 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
 import helmet from 'helmet';
 
-import { AppModule } from './app.module';
-
-export async function createApp(): Promise<INestApplication> {
-  const app = await NestFactory.create(AppModule);
-
+export function configApp(app: INestApplication): INestApplication {
   app.use(
     compression({
       threshold: 0,
@@ -31,6 +26,7 @@ export async function createApp(): Promise<INestApplication> {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 
+  app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',

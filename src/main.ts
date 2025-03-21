@@ -1,8 +1,14 @@
-import { createApp } from './app';
+import { INestApplication } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { Server } from 'net';
+
+import { configApp } from './app';
+import { AppModule } from './app.module';
 import { CommonConfig, commonConfigObj } from './common/config';
 
 async function bootstrap(): Promise<void> {
-  const app = await createApp();
+  const app = await NestFactory.create<INestApplication<Server>>(AppModule);
+  configApp(app);
   const { port } = <CommonConfig>app.get(commonConfigObj.KEY);
   await app.listen(port, () => {
     console.info(`listening on port ${port}`);

@@ -3,9 +3,6 @@ import { Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
-
   @Prop({ required: true, unique: true })
   email: string;
 
@@ -20,6 +17,8 @@ export class User {
 
   @Prop()
   avatarUrl: string;
+
+  _id: Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

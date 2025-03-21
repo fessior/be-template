@@ -29,12 +29,29 @@ jobs:
           report-json: './eslint-report.json'
 
       - name: Run unit tests
-        run: JEST_JUNIT_OUTPUT_DIR=reports JEST_JUNIT_OUTPUT_NAME=unit-test.xml JEST_JUNIT_ANCESTOR_SEPARATOR=" > " yarn test --reporters=jest-junit
+        run: |
+          JEST_SUITE_NAME="Unit tests" \
+          JEST_JUNIT_OUTPUT_DIR=reports \
+          JEST_JUNIT_OUTPUT_NAME=unit-test.xml \
+          JEST_JUNIT_ANCESTOR_SEPARATOR=" > " \
+          yarn test --reporters=jest-junit
 
-      - name: Test Report
+      - name: Run integration tests
+        run: |
+          docker compose -f docker/integration/infra.yml up -d
+
+          JEST_SUITE_NAME="Integration tests" \
+          JEST_JUNIT_OUTPUT_DIR=reports \
+          JEST_JUNIT_OUTPUT_NAME=integration-test.xml \
+          JEST_JUNIT_ANCESTOR_SEPARATOR=" > " \
+          yarn test:integration --reporters=jest-junit
+
+          docker compose -f docker/integration/infra.yml down --remove-orphans
+
+      - name: Report test results
         uses: dorny/test-reporter@v2
         if: success() || failure()
         with:
-          name: Unit tests
-          path: reports/unit-test.xml
+          name: Jest tests
+          path: reports/*-test.xml
           reporter: jest-junit

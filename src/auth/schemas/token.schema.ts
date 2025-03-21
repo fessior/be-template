@@ -6,9 +6,6 @@ import { User } from '@/users/schemas';
 
 @Schema({ timestamps: true })
 export class Token {
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
-
   @Prop({ type: Types.ObjectId, required: true, ref: User.name, index: true })
   userId: Types.ObjectId;
 
@@ -17,6 +14,8 @@ export class Token {
 
   @Prop({ default: () => dayjs().add(1, 'year').toDate() })
   expiredAt: Date;
+
+  _id: Types.ObjectId;
 }
 
 export const TokenSchema = SchemaFactory.createForClass(Token);

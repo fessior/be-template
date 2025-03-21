@@ -26,7 +26,8 @@
     "test:integration": "jest --config ./jest.config.integration.js",
     "test:e2e": "jest --config ./jest.config.e2e.js",
     "prepare": "husky",
-    "infra": "docker compose -f docker/local/infra.yml up"
+    "infra": "docker compose -f docker/local/infra.yml up",
+    "infra:integration": "docker compose -f docker/integration/infra.yml up"
   },
   "dependencies": {
     "@golevelup/ts-jest": "^0.6.2",
@@ -44,6 +45,7 @@
     "class-validator": "^0.14.1",
     "compression": "^1.8.0",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
     "google-auth-library": "^9.15.1",
     "helmet": "^8.0.0",
     "lodash": "^4.17.21",
