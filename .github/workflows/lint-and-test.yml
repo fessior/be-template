@@ -37,14 +37,16 @@ jobs:
 
       - name: Run integration tests
         run: |
+          docker compose -f docker/integration/infra.yml up -d
+
           JEST_JUNIT_OUTPUT_DIR=reports \
           JEST_JUNIT_OUTPUT_NAME=integration-test.xml \
           JEST_JUNIT_ANCESTOR_SEPARATOR=" > " \
-          docker compose -f docker/integration/infra.yml up -d
           yarn test:integration --reporters=jest-junit
+
           docker compose -f docker/integration/infra.yml down --remove-orphans
 
-      - name: Integration test Report
+      - name: Report test results
         uses: dorny/test-reporter@v2
         if: success() || failure()
         with:
