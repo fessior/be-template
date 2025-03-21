@@ -40,7 +40,7 @@ jobs:
           JEST_JUNIT_OUTPUT_DIR=reports \
           JEST_JUNIT_OUTPUT_NAME=integration-test.xml \
           JEST_JUNIT_ANCESTOR_SEPARATOR=" > " \
-          docker compose -f ../../docker/integration/infra.yml up -d --abort-on-container-exit
+          docker compose -f ../../docker/integration/infra.yml up -d
           yarn test:integration --reporters=jest-junit
           docker compose -f ../../docker/integration/infra.yml down --remove-orphans
 
