@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 
-import { MetricsDto } from '../dtos';
 import { MetricsService } from '../services';
+import { Metrics } from '../types';
 
 @Injectable()
 export class MetricsInterceptor implements NestInterceptor {
@@ -31,7 +31,7 @@ export class MetricsInterceptor implements NestInterceptor {
         const { statusCode } = response;
         const durationSecond = (Date.now() - startTime) / 1000;
 
-        const metricsDto: MetricsDto = {
+        const metricsDto: Metrics = {
           method,
           route,
           statusCode,
@@ -47,7 +47,7 @@ export class MetricsInterceptor implements NestInterceptor {
         }
 
         const durationSecond = (Date.now() - startTime) / 1000;
-        const metricsDto: MetricsDto = {
+        const metricsDto: Metrics = {
           method,
           route,
           statusCode,

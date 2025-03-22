@@ -1,4 +1,4 @@
-export interface MetricsDto {
+export interface Metrics {
   method: string;
   route: string;
   statusCode: number;

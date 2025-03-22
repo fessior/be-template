@@ -1,4 +1,5 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
 import helmet from 'helmet';
 
@@ -23,8 +24,22 @@ export function configApp(app: INestApplication): INestApplication {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 
-  app.setGlobalPrefix('api', { exclude: ['health', 'metrics'] });
+  app.setGlobalPrefix('api', {
+    exclude: ['health', 'metrics', 'api-docs', 'swagger/yaml'],
+  });
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+
+  const config = new DocumentBuilder()
+    .setTitle('Fessior template')
+    .setDescription('Fessior template API description')
+    .setVersion('1.0')
+    .addTag('Fessior template')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document, {
+    yamlDocumentUrl: 'swagger/yaml',
+  });
 
   return app;
 }

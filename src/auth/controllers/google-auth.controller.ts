@@ -1,4 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 
 import { ConfigureAuth } from '../decorators';
 import { GoogleLoginRequestDto, GoogleLoginResponseDto } from '../dtos';
@@ -11,6 +12,7 @@ export class GoogleAuthController {
   @Post()
   @HttpCode(HttpStatus.OK)
   @ConfigureAuth({ skipAuth: true })
+  @ApiOperation({ summary: 'Login using Google' })
   public async login(
     @Body() dto: GoogleLoginRequestDto,
   ): Promise<GoogleLoginResponseDto> {
