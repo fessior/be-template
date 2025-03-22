@@ -5,7 +5,7 @@ import { Counter, Histogram, Summary } from 'prom-client';
 import { MetricsDto } from '../dtos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-enum STATUS_CODE_TYPE {
+enum StatusCodeType {
   CLIENT_ERROR = '4xx',
   SERVER_ERROR = '5xx',
   SUCCESS = '2xx',
@@ -27,25 +27,28 @@ export class MetricsService {
   ) {}
 
   recordMetrics(metricsData: MetricsDto): void {
-    const { method, route, statusCode, duration } = metricsData;
+    const { method, route, statusCode, durationSecond } = metricsData;
 
     this.httpRequestsCounter.inc();
 
     this.httpRequestsCounter.inc({ method, route });
 
-    this.httpRequestDurationHistogram.observe({ method, route }, duration);
+    this.httpRequestDurationHistogram.observe(
+      { method, route },
+      durationSecond,
+    );
 
-    this.httpRequestDurationSummary.observe({ method, route }, duration);
+    this.httpRequestDurationSummary.observe({ method, route }, durationSecond);
 
-    let statusType = STATUS_CODE_TYPE.INFORMATION;
+    let statusType = StatusCodeType.INFORMATION;
     if (statusCode >= 500) {
-      statusType = STATUS_CODE_TYPE.SERVER_ERROR;
+      statusType = StatusCodeType.SERVER_ERROR;
     } else if (statusCode >= 400) {
-      statusType = STATUS_CODE_TYPE.CLIENT_ERROR;
+      statusType = StatusCodeType.CLIENT_ERROR;
     } else if (statusCode >= 300) {
-      statusType = STATUS_CODE_TYPE.REDIRECT;
+      statusType = StatusCodeType.REDIRECT;
     } else if (statusCode >= 200) {
-      statusType = STATUS_CODE_TYPE.SUCCESS;
+      statusType = StatusCodeType.SUCCESS;
     }
 
     this.httpStatusCodesCounter.inc({ method, route, status_code: statusType });

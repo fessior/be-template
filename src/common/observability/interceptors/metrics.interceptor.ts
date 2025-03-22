@@ -29,13 +29,13 @@ export class MetricsInterceptor implements NestInterceptor {
       tap(() => {
         const response = context.switchToHttp().getResponse();
         const { statusCode } = response;
-        const duration = (Date.now() - startTime) / 1000;
+        const durationSecond = (Date.now() - startTime) / 1000;
 
         const metricsDto: MetricsDto = {
           method,
           route,
           statusCode,
-          duration,
+          durationSecond,
         };
 
         this.metricsService.recordMetrics(metricsDto);
@@ -46,12 +46,12 @@ export class MetricsInterceptor implements NestInterceptor {
           statusCode = error.getStatus();
         }
 
-        const duration = (Date.now() - startTime) / 1000;
+        const durationSecond = (Date.now() - startTime) / 1000;
         const metricsDto: MetricsDto = {
           method,
           route,
           statusCode,
-          duration,
+          durationSecond,
         };
 
         this.metricsService.recordMetrics(metricsDto);
