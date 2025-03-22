@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 
 import { MyProfileResponse } from '../dtos';
 import { UserService } from '../services';
@@ -9,6 +10,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('me')
+  @ApiOperation({ summary: 'Get user profile' })
   public myProfile(
     @ReqUser() authUser: Express.AuthenticatedHttpUser,
   ): MyProfileResponse {

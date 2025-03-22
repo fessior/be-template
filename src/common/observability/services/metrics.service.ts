@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter, Histogram, Summary } from 'prom-client';
 
-import { MetricsDto } from '../dtos';
+import { Metrics } from '../types';
 
 enum StatusCodeType {
   CLIENT_ERROR = '4xx',
@@ -25,7 +25,7 @@ export class MetricsService {
     private readonly httpStatusCodesCounter: Counter,
   ) {}
 
-  recordMetrics(metricsData: MetricsDto): void {
+  recordMetrics(metricsData: Metrics): void {
     const { method, route, statusCode, durationSecond } = metricsData;
 
     this.httpRequestsCounter.inc();
