@@ -4,7 +4,6 @@ import { Counter, Histogram, Summary } from 'prom-client';
 
 import { MetricsDto } from '../dtos';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 enum StatusCodeType {
   CLIENT_ERROR = '4xx',
   SERVER_ERROR = '5xx',
