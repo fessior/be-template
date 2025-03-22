@@ -16,6 +16,7 @@ import {
   commonConfigObj,
   observabilityConfigObj,
 } from './common/config';
+import { MetricsInterceptor } from './common/observability/interceptors';
 import { ObservabilityModule } from './common/observability/observability.module';
 import { UserModule } from './users/user.module';
 
@@ -37,24 +38,16 @@ import { UserModule } from './users/user.module';
     {
       // Enable global validation of requests
       provide: APP_PIPE,
-      useValue: new ValidationPipe({
-        transform: true,
-        whitelist: true,
-      }),
+      useValue: new ValidationPipe({ transform: true, whitelist: true }),
     },
-    {
-      provide: APP_GUARD,
-      useClass: ApiEnvGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    { provide: APP_GUARD, useClass: ApiEnvGuard },
+    { provide: APP_GUARD, useClass: AuthGuard },
     {
       // Enable global response serialization
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
+    { provide: APP_INTERCEPTOR, useClass: MetricsInterceptor },
   ],
 })
 export class AppModule {}

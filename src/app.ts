@@ -15,10 +15,7 @@ export function configApp(app: INestApplication): INestApplication {
     }),
   );
   app.use(
-    helmet({
-      contentSecurityPolicy: true,
-      crossOriginEmbedderPolicy: true,
-    }),
+    helmet({ contentSecurityPolicy: true, crossOriginEmbedderPolicy: true }),
   );
   app.enableCors({
     credentials: true,
@@ -26,11 +23,8 @@ export function configApp(app: INestApplication): INestApplication {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 
-  app.setGlobalPrefix('api');
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: '1',
-  });
+  app.setGlobalPrefix('api', { exclude: ['health', 'metrics'] });
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
   return app;
 }
