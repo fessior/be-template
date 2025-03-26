@@ -3,22 +3,21 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
-import { fakeSystemTime } from '@test-helpers/time';
 import { Model } from 'mongoose';
 
 import { TokenService } from './token.service';
-import { TokenMockData } from '../mocks';
+import { MockTokenBuilder } from '../mocks';
 import { Token } from '../schemas';
 import { authConfigObj } from '@/common/config';
 import { ConfigMock } from '@/common/config/mocks';
-import { UserMockData } from '@/users/mocks';
+import { MockUserBuilder } from '@/users/mocks';
 import { User } from '@/users/schemas';
 
-const MOCK_USER = UserMockData.getUser();
+const mockUser = new MockUserBuilder().build();
 
-const VALID_TOKEN = TokenMockData.getValidToken(MOCK_USER);
-const INACTIVE_TOKEN = TokenMockData.getInactiveToken(MOCK_USER);
-const EXPIRED_TOKEN = TokenMockData.getExpiredToken(MOCK_USER);
+const validToken = new MockTokenBuilder(mockUser).makeValid().build();
+const inactiveToken = new MockTokenBuilder(mockUser).makeInactive().build();
+const expiredToken = new MockTokenBuilder(mockUser).makeExpired().build();
 
 describe('TokenService', () => {
   let tokenService: TokenService;
@@ -49,67 +48,60 @@ describe('TokenService', () => {
   });
 
   it('Should be able to sign and decode its own token', async () => {
-    const accessToken = await tokenService.signAccessToken(VALID_TOKEN);
+    const accessToken = await tokenService.signAccessToken(validToken);
     const decodedToken = await tokenService.decodeAccessToken(accessToken);
-    expect(decodedToken.tokenId).toBe(VALID_TOKEN._id.toString());
+    expect(decodedToken.tokenId).toBe(validToken._id.toString());
   });
 
   describe('Finding user attached to token', () => {
     test('Token is not found', async () => {
       (<jest.Mock>(
-        tokenModel.findById(VALID_TOKEN._id).populate('userId').lean
+        tokenModel.findById(validToken._id).populate('userId').lean
       )).mockResolvedValueOnce(null);
       await expect(
-        tokenService.findUserByToken(VALID_TOKEN._id),
+        tokenService.findUserByToken(validToken._id),
       ).rejects.toThrow(UnauthorizedException);
     });
 
     test('Existing token found', async () => {
       (<jest.Mock>(
-        tokenModel.findById(VALID_TOKEN._id).populate('userId').lean
-      )).mockResolvedValueOnce({ ...VALID_TOKEN, userId: MOCK_USER });
-      const user = await tokenService.findUserByToken(VALID_TOKEN._id);
-      expect(user).toEqual(MOCK_USER);
+        tokenModel.findById(validToken._id).populate('userId').lean
+      )).mockResolvedValueOnce({ ...validToken, userId: mockUser });
+      const user = await tokenService.findUserByToken(validToken._id);
+      expect(user).toEqual(mockUser);
     });
   });
 
   describe('Testing token validity, given the token ID', () => {
-    beforeAll(() => {
-      fakeSystemTime(TokenMockData.mockTimestamp);
-    });
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
     it('Should return null if the token is not found', async () => {
       (<jest.Mock>(
-        tokenModel.findById(VALID_TOKEN._id).lean
+        tokenModel.findById(validToken._id).lean
       )).mockResolvedValueOnce(null);
-      const token = await tokenService.findAndValidateToken(VALID_TOKEN._id);
+      const token = await tokenService.findAndValidateToken(validToken._id);
       expect(token).toBeNull();
     });
 
     it("Should return the token if it's still active, and not expired", async () => {
       (<jest.Mock>(
-        tokenModel.findById(VALID_TOKEN._id).lean
-      )).mockResolvedValueOnce(VALID_TOKEN);
-      const token = await tokenService.findAndValidateToken(VALID_TOKEN._id);
-      expect(token).toEqual(VALID_TOKEN);
+        tokenModel.findById(validToken._id).lean
+      )).mockResolvedValueOnce(validToken);
+      const token = await tokenService.findAndValidateToken(validToken._id);
+      expect(token).toEqual(validToken);
     });
 
     it('Should return null if the token is inactive', async () => {
       (<jest.Mock>(
-        tokenModel.findById(INACTIVE_TOKEN._id).lean
-      )).mockResolvedValueOnce(INACTIVE_TOKEN);
-      const token = await tokenService.findAndValidateToken(INACTIVE_TOKEN._id);
+        tokenModel.findById(inactiveToken._id).lean
+      )).mockResolvedValueOnce(inactiveToken);
+      const token = await tokenService.findAndValidateToken(inactiveToken._id);
       expect(token).toBeNull();
     });
 
     it('Should return null if the token is passed its expiry date', async () => {
       (<jest.Mock>(
-        tokenModel.findById(EXPIRED_TOKEN._id).lean
-      )).mockResolvedValueOnce(EXPIRED_TOKEN);
-      const token = await tokenService.findAndValidateToken(EXPIRED_TOKEN._id);
+        tokenModel.findById(expiredToken._id).lean
+      )).mockResolvedValueOnce(expiredToken);
+      const token = await tokenService.findAndValidateToken(expiredToken._id);
       expect(token).toBeNull();
     });
   });

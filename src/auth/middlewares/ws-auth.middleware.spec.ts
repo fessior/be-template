@@ -3,14 +3,14 @@ import { Test } from '@nestjs/testing';
 import { Socket } from 'socket.io';
 
 import { WsAuthMiddleware } from './ws-auth.middleware';
-import { TokenMockData } from '../mocks';
+import { MockTokenBuilder } from '../mocks';
 import { TokenService } from '../services';
-import { UserMockData } from '@/users/mocks';
+import { MockUserBuilder } from '@/users/mocks';
 
-const MOCK_USER = UserMockData.getUser();
+const mockUser = new MockUserBuilder().build();
 
-const MOCK_TOKEN = TokenMockData.getValidToken(MOCK_USER);
-const MOCK_DECODED_JWT = TokenMockData.getDecodedJwt(MOCK_TOKEN);
+const validToken = new MockTokenBuilder(mockUser).makeValid().build();
+const decodedJwt = MockTokenBuilder.getDecodedJwt(validToken);
 
 describe('WsAuthMiddleware', () => {
   let tokenService: DeepMocked<TokenService>;
@@ -47,7 +47,7 @@ describe('WsAuthMiddleware', () => {
 
   test('Auth should fail if token is invalid', async () => {
     socket.handshake.headers.authorization = 'Bearer 123';
-    tokenService.decodeAccessToken.mockResolvedValueOnce(MOCK_DECODED_JWT);
+    tokenService.decodeAccessToken.mockResolvedValueOnce(decodedJwt);
     tokenService.findAndValidateToken.mockResolvedValueOnce(null);
     await wsAuth.authenticate(socket, next);
     expect(next).toHaveBeenCalledTimes(1);
@@ -57,16 +57,16 @@ describe('WsAuthMiddleware', () => {
 
   test('Auth should succeed if given valid token', async () => {
     socket.handshake.headers.authorization = 'Bearer 123';
-    tokenService.decodeAccessToken.mockResolvedValueOnce(MOCK_DECODED_JWT);
-    tokenService.findAndValidateToken.mockResolvedValueOnce(MOCK_TOKEN);
-    tokenService.findUserByToken.mockResolvedValueOnce(MOCK_USER);
+    tokenService.decodeAccessToken.mockResolvedValueOnce(decodedJwt);
+    tokenService.findAndValidateToken.mockResolvedValueOnce(validToken);
+    tokenService.findUserByToken.mockResolvedValueOnce(mockUser);
 
     await wsAuth.authenticate(socket, next);
     expect(next).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenCalledWith();
     expect(socket.user).toEqual({
-      token: MOCK_TOKEN,
-      profile: MOCK_USER,
+      token: validToken,
+      profile: mockUser,
     });
   });
 });

@@ -6,15 +6,15 @@ import { Test } from '@nestjs/testing';
 import { Request } from 'express';
 
 import { AuthGuard } from './auth.guard';
-import { TokenMockData } from '../mocks';
+import { MockTokenBuilder } from '../mocks';
 import { TokenService } from '../services';
 import { AuthOption } from '../types';
-import { UserMockData } from '@/users/mocks';
+import { MockUserBuilder } from '@/users/mocks';
 
-const MOCK_USER = UserMockData.getUser();
+const mockUser = new MockUserBuilder().build();
 
-const MOCK_TOKEN = TokenMockData.getValidToken(MOCK_USER);
-const MOCK_DECODED_JWT = TokenMockData.getDecodedJwt(MOCK_TOKEN);
+const validToken = new MockTokenBuilder(mockUser).makeValid().build();
+const decodedJwt = MockTokenBuilder.getDecodedJwt(validToken);
 
 describe('AuthGuard', () => {
   let reflector: DeepMocked<Reflector>;
@@ -59,17 +59,17 @@ describe('AuthGuard', () => {
 
   it('Should attach user and token to request if authentication succeeds', async () => {
     req.headers.authorization = 'Bearer 123';
-    tokenService.decodeAccessToken.mockResolvedValueOnce(MOCK_DECODED_JWT);
-    tokenService.findAndValidateToken.mockResolvedValueOnce(MOCK_TOKEN);
-    tokenService.findUserByToken.mockResolvedValueOnce(MOCK_USER);
+    tokenService.decodeAccessToken.mockResolvedValueOnce(decodedJwt);
+    tokenService.findAndValidateToken.mockResolvedValueOnce(validToken);
+    tokenService.findUserByToken.mockResolvedValueOnce(mockUser);
     reflector.get.mockReturnValue(<AuthOption>{});
 
     const res = await authGuard.canActivate(ctx);
 
     expect(res).toBe(true);
     expect(req.user).toEqual({
-      token: MOCK_TOKEN,
-      profile: MOCK_USER,
+      token: validToken,
+      profile: mockUser,
     });
   });
 
@@ -84,7 +84,7 @@ describe('AuthGuard', () => {
 
     it('Should throw an error if invalid token provided', async () => {
       req.headers.authorization = 'Bearer 123';
-      tokenService.decodeAccessToken.mockResolvedValueOnce(MOCK_DECODED_JWT);
+      tokenService.decodeAccessToken.mockResolvedValueOnce(decodedJwt);
       tokenService.findAndValidateToken.mockResolvedValueOnce(null);
       reflector.get.mockReturnValue(<AuthOption>{});
       await expect(authGuard.canActivate(ctx)).rejects.toThrow(
