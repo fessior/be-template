@@ -7,10 +7,10 @@ import { GoogleAuthService } from './google-auth.service';
 import { TokenService } from './token.service';
 import { authConfigObj } from '@/common/config';
 import { ConfigMock } from '@/common/config/mocks';
-import { UserMockData } from '@/users/mocks';
+import { MockUserBuilder } from '@/users/mocks';
 import { UserService } from '@/users/services';
 
-const MOCK_USER = UserMockData.getUser();
+const mockUser = new MockUserBuilder().build();
 
 describe('GoogleAuthService', () => {
   let userService: DeepMocked<UserService>;
@@ -49,21 +49,21 @@ describe('GoogleAuthService', () => {
         aud: 'audience',
         iat: 1111111111,
         exp: 2222222222,
-        family_name: MOCK_USER.lastName,
-        given_name: MOCK_USER.firstName,
-        email: MOCK_USER.email,
-        picture: MOCK_USER.avatarUrl,
-        sub: MOCK_USER.googleId,
+        family_name: mockUser.lastName,
+        given_name: mockUser.firstName,
+        email: mockUser.email,
+        picture: mockUser.avatarUrl,
+        sub: mockUser.googleId,
       });
 
       await googleAuthService.authenticate(idToken);
       expect(userService.createOrUpdateUser).toHaveBeenCalledTimes(1);
       expect(userService.createOrUpdateUser).toHaveBeenCalledWith({
-        email: MOCK_USER.email,
-        firstName: MOCK_USER.firstName,
-        lastName: MOCK_USER.lastName,
-        picture: MOCK_USER.avatarUrl,
-        googleId: MOCK_USER.googleId,
+        email: mockUser.email,
+        firstName: mockUser.firstName,
+        lastName: mockUser.lastName,
+        picture: mockUser.avatarUrl,
+        googleId: mockUser.googleId,
       });
       expect(tokenService.create).toHaveBeenCalledTimes(1);
       expect(tokenService.signAccessToken).toHaveBeenCalledTimes(1);

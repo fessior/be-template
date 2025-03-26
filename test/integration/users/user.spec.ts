@@ -1,17 +1,16 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { testApp, testModule } from '@test-helpers/setup-integration';
-import { fakeSystemTime } from '@test-helpers/time';
 import { signAccessToken } from '@test-helpers/token';
 import { Model } from 'mongoose';
 import * as request from 'supertest';
 
-import { TokenMockData } from '@/auth/mocks';
+import { MockTokenBuilder } from '@/auth/mocks';
 import { Token } from '@/auth/schemas';
-import { UserMockData } from '@/users/mocks';
+import { MockUserBuilder } from '@/users/mocks';
 import { User } from '@/users/schemas';
 
-const MOCK_USER = UserMockData.getUser();
-const VALID_TOKEN = TokenMockData.getValidToken(MOCK_USER);
+const mockUser = new MockUserBuilder().build();
+const validToken = new MockTokenBuilder(mockUser).makeValid().build();
 
 describe('User APIs', () => {
   let userModel: Model<User>;
@@ -24,14 +23,13 @@ describe('User APIs', () => {
 
   beforeEach(async () => {
     // Prepare a default user in the database for testing
-    await userModel.create(MOCK_USER);
-    await tokenModel.create(VALID_TOKEN);
+    await userModel.create(mockUser);
+    await tokenModel.create(validToken);
   });
 
   describe('GET /api/v1/users/me', () => {
     it('Should return current user profile with required fields', async () => {
-      const accessToken = await signAccessToken(testModule, VALID_TOKEN);
-      fakeSystemTime(TokenMockData.mockTimestamp);
+      const accessToken = await signAccessToken(testModule, validToken);
 
       const res = await request(testApp.getHttpServer())
         .get('/api/v1/users/me')
@@ -39,10 +37,10 @@ describe('User APIs', () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({
-        email: MOCK_USER.email,
-        firstName: MOCK_USER.firstName,
-        lastName: MOCK_USER.lastName,
-        avatarUrl: MOCK_USER.avatarUrl,
+        email: mockUser.email,
+        firstName: mockUser.firstName,
+        lastName: mockUser.lastName,
+        avatarUrl: mockUser.avatarUrl,
       });
     });
   });

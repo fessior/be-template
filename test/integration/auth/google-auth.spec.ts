@@ -5,10 +5,10 @@ import { LoginTicket, OAuth2Client } from 'google-auth-library';
 import { Model } from 'mongoose';
 import * as request from 'supertest';
 
-import { UserMockData } from '@/users/mocks';
+import { MockUserBuilder } from '@/users/mocks';
 import { User } from '@/users/schemas';
 
-const MOCK_USER = UserMockData.getUser();
+const mockUser = new MockUserBuilder().build();
 
 describe('Testing Google auth APIs', () => {
   let userModel: Model<User>;
@@ -28,11 +28,11 @@ describe('Testing Google auth APIs', () => {
         aud: 'audience',
         iat: 1111111111,
         exp: 2222222222,
-        family_name: MOCK_USER.lastName,
-        given_name: MOCK_USER.firstName,
-        email: MOCK_USER.email,
-        picture: MOCK_USER.avatarUrl,
-        sub: MOCK_USER.googleId,
+        family_name: mockUser.lastName,
+        given_name: mockUser.firstName,
+        email: mockUser.email,
+        picture: mockUser.avatarUrl,
+        sub: mockUser.googleId,
       });
 
       const res = await request(testApp.getHttpServer())
@@ -44,14 +44,14 @@ describe('Testing Google auth APIs', () => {
 
       // Check for that user in the database
       const user = await userModel
-        .findOne({ googleId: MOCK_USER.googleId })
+        .findOne({ googleId: mockUser.googleId })
         .lean();
       expect(user).toBeTruthy();
-      expect(user?.lastName).toBe(MOCK_USER.lastName);
-      expect(user?.firstName).toBe(MOCK_USER.firstName);
-      expect(user?.email).toBe(MOCK_USER.email);
-      expect(user?.avatarUrl).toBe(MOCK_USER.avatarUrl);
-      expect(user?.googleId).toBe(MOCK_USER.googleId);
+      expect(user?.lastName).toBe(mockUser.lastName);
+      expect(user?.firstName).toBe(mockUser.firstName);
+      expect(user?.email).toBe(mockUser.email);
+      expect(user?.avatarUrl).toBe(mockUser.avatarUrl);
+      expect(user?.googleId).toBe(mockUser.googleId);
     });
   });
 });

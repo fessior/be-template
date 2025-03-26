@@ -1,49 +1,48 @@
+import * as dayjs from 'dayjs';
 import { Types } from 'mongoose';
 
 import { Token } from '../schemas';
 import { DecodedJwt } from '../types';
 import { User } from '@/users/schemas';
 
-export class TokenMockData {
-  /**
-   * Timestamp to use for token validation
-   * `getValidToken`, `getInactiveToken`, and `getExpiredToken`
-   * bases their token expiration on this timestamp
-   */
-  public static readonly mockTimestamp: Date = new Date(
-    '2022-02-01T00:00:00.000Z',
-  );
+export class MockTokenBuilder {
+  private token: Token;
 
-  public static getValidToken(user: User): Token {
-    return {
+  constructor(user: User) {
+    // Set default values for builder
+    this.token = {
       _id: new Types.ObjectId('81927555e99b62c9b1984300'),
       userId: user._id,
       isActive: true,
-      expiredAt: new Date('2022-03-01T00:00:00.000Z'),
+      expiredAt: dayjs().add(1, 'year').toDate(),
     };
   }
 
-  public static getInactiveToken(user: User): Token {
+  public static getDecodedJwt(t: Token): DecodedJwt {
     return {
-      _id: new Types.ObjectId('81927555e99b62c9b1984300'),
-      userId: user._id,
-      isActive: false,
-      expiredAt: new Date('2022-03-01T00:00:00.000Z'),
+      tokenId: t._id.toString(),
     };
   }
 
-  public static getExpiredToken(user: User): Token {
-    return {
-      _id: new Types.ObjectId('81927555e99b62c9b1984300'),
-      userId: user._id,
-      isActive: true,
-      expiredAt: new Date('2022-01-01T00:00:00.000Z'),
-    };
+  public build(): Token {
+    return this.token;
   }
 
-  public static getDecodedJwt(token: Token): DecodedJwt {
-    return {
-      tokenId: token._id.toString(),
-    };
+  public makeValid(): MockTokenBuilder {
+    this.token.isActive = true;
+    this.token.expiredAt = dayjs().add(1, 'year').toDate();
+    return this;
+  }
+
+  public makeInactive(): MockTokenBuilder {
+    this.token.isActive = false;
+    this.token.expiredAt = dayjs().add(1, 'year').toDate();
+    return this;
+  }
+
+  public makeExpired(): MockTokenBuilder {
+    this.token.isActive = true;
+    this.token.expiredAt = dayjs().subtract(1, 'year').toDate();
+    return this;
   }
 }
