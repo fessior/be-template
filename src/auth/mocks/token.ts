@@ -9,9 +9,8 @@ export class MockTokenBuilder {
   private token: Token;
 
   constructor(user: User) {
-    // Set default values for builder
     this.token = {
-      _id: new Types.ObjectId('81927555e99b62c9b1984300'),
+      _id: new Types.ObjectId(),
       userId: user._id,
       isActive: true,
       expiredAt: dayjs().add(1, 'year').toDate(),

@@ -7,7 +7,7 @@ export class MockUserBuilder {
 
   constructor() {
     this.user = {
-      _id: new Types.ObjectId('65fbdb8e9c3a4f27b2e6a1d5'),
+      _id: new Types.ObjectId(),
       email: 'johndoe@gmail.com',
       googleId: '1234567890',
       firstName: 'John',
